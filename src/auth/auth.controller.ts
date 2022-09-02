@@ -4,17 +4,17 @@ import { AuthService } from "./auth.service";
 //preifx
 @Controller('auth')
 
-export class AuthController{
-    constructor(private authService:AuthService){}
-@Post('signup')
-    signup(){
+export class AuthController {
+    constructor(private authService: AuthService) { }
+    @Post('signup')
+    signup() {
 
-        return "I'm Signup"
+        return this.authService.signup()
     }
 
     @Post('signin')
-    signin(){
+    signin() {
 
-        return "I'm Login"
+        return this.authService.login()
     }
 }
