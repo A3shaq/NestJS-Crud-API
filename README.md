@@ -1,5 +1,5 @@
 # NestJS-Crud-API
-Learning basics of nestJS from the codecamp tutorials
+Learning basics of nestJS from the freecodecamp tutorials
 Example Primsa help commands
 
 Set up a new Prisma project
