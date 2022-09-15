@@ -49,7 +49,7 @@ export class AuthService {
         // find the user by email
         const user = await this.prisma.user.findUnique({
             where: {
-                email: dto.email 
+                email: dto.email
             }
         })
         // if user does not exist throw an exception
@@ -63,7 +63,7 @@ export class AuthService {
 
         // if every things goes well send back the user
         delete user.hash
-        return user
+        return { ...user, message: "Success login", succes: true }
     }
 
 } 
