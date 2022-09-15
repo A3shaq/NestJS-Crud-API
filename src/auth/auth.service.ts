@@ -25,11 +25,13 @@ export class AuthService {
 
             })
 
+            // directy solution remove specfic key
             delete user.hash
+            // we need to return the saved user
             return user
         }
         catch (error) {
-
+            //throw custome error
             if (error instanceof PrismaClientKnownRequestError) {
 
                 // P2002 error code satnds for duplicate field error
@@ -40,13 +42,28 @@ export class AuthService {
 
             throw error;
         }
-        // we need to return the saved user
 
-        // directy solution remove specfic key
     }
-    login() {
+    async login(dto: AuthDto) {
 
-        return { msg: "I have Login" }
+        // find the user by email
+        const user = await this.prisma.user.findUnique({
+            where: {
+                email: dto.email 
+            }
+        })
+        // if user does not exist throw an exception
+        if (!user) throw new ForbiddenException("Credentials incorrect")
+        // compare password
+
+        const pwMatches = await argon.verify(user.hash, dto.password)
+        // if password incorrect throw an exception
+        if (!pwMatches) throw new ForbiddenException("Credentials incorrect")
+
+
+        // if every things goes well send back the user
+        delete user.hash
+        return user
     }
 
 } 
