@@ -4,12 +4,12 @@ import { AuthDto } from "./dto";
 import * as argon from "argon2"
 import { PrismaClientKnownRequestError, PrismaClientValidationError } from "@prisma/client/runtime";
 import { JwtService } from "@nestjs/jwt";
-import {ConfigService} from "@nestjs/config"
+import { ConfigService } from "@nestjs/config"
 
 @Injectable()
 export class AuthService {
 
-    constructor(private prisma: PrismaService, private jwt: JwtService,private config:ConfigService) {
+    constructor(private prisma: PrismaService, private jwt: JwtService, private config: ConfigService) {
 
     }
     async signup(dto: AuthDto) {
@@ -30,7 +30,7 @@ export class AuthService {
             // directy solution remove specfic key
             delete user.hash
             // we need to return the saved user
-            return this.signToken(user.id,user.email)
+            return this.signToken(user.id, user.email)
         }
         catch (error) {
             //throw custome error
@@ -66,20 +66,26 @@ export class AuthService {
         // if every things goes well send back the user
         // delete user.hash
         // return { ...user, message: "Success login" }
-        return this.signToken(user.id,user.email)
+        return this.signToken(user.id, user.email)
     }
 
-     signToken(userId: number, email: string):Promise<string> {
+    async signToken(userId: number, email: string): Promise<{ access_token: string,success:boolean,message:string }> {
 
         const payload = {
             sub: userId,
             email
         }
 
-        return this.jwt.signAsync(payload, {
+        const token = await this.jwt.signAsync(payload, {
             expiresIn: '15m',
-            secret:this.config.get('JWT_SECRET')
+            secret: this.config.get('JWT_SECRET')
         })
+
+        return {
+            access_token: token,
+            success:true,
+            message:"Login Successfully"
+        }
     }
 
 } 
