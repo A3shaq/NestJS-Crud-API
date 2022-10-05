@@ -33,7 +33,7 @@ export class AuthService {
             return this.signToken(user.id, user.email)
         }
         catch (error) {
-            //throw custome error
+            //throw custom error
             if (error instanceof PrismaClientKnownRequestError) {
 
                 // P2002 error code satnds for duplicate field error
